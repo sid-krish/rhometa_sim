@@ -1,0 +1,9 @@
+name: rhometa
+channels:
+  - defaults
+  - bioconda
+  - conda-forge
+dependencies:
+  - msprime>=1.1.0
+  - art>=2016.06.05
+  - samtools>=1.12
