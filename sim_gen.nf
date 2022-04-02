@@ -35,8 +35,6 @@ process RATE_SELECTOR {
     // This process prevents the need to use each in every process, which can be confusing
     // Perhaps this could be handled in a more elegant way using some DSL2 technique
     
-    // maxForks 1 // Run sequentially
-    
     // echo true
 
     input:
@@ -66,9 +64,9 @@ process RATE_SELECTOR {
 
 process MSPRIME {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
-
-    // maxForks 1
     
+    conda 'conda-forge::msprime=1.1.1 conda-forge::gsl'
+
     input:
         tuple val(prefix_filename),
             val(rho),
@@ -100,7 +98,7 @@ process MSPRIME {
 process REFORMAT_FASTA {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
-    // maxForks 1
+    conda 'bioconda::samtools=1.12 bioconda::pysam'
 
     input:
         tuple val(prefix_filename),
@@ -132,8 +130,6 @@ process REFORMAT_FASTA {
 
 process ISOLATE_GENOME {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
-
-    // maxForks 1
 
     input:
         tuple val(prefix_filename),
@@ -167,7 +163,7 @@ process ISOLATE_GENOME {
 process ART_ILLUMINA_SINGLE_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
-    // maxForks 1
+    label 'ART'
 
     input:
         tuple val(prefix_filename),
@@ -207,7 +203,7 @@ process ART_ILLUMINA_SINGLE_END {
 process ART_ILLUMINA_PAIRED_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
-    // maxForks 1
+    label 'ART'
 
     input:
         tuple val(prefix_filename),
@@ -252,6 +248,10 @@ process BWA_MEM_SINGLE_END {
 
     // maxForks 1
 
+    label 'BWA'
+
+    conda 'bioconda::samtools=1.12 bioconda::bwa'
+
     input:
         tuple val(prefix_filename),
             val(rho),
@@ -294,6 +294,10 @@ process BWA_MEM_PAIRED_END {
     publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     // maxForks 1
+
+    label 'BWA'
+
+    conda 'bioconda::samtools=1.12 bioconda::bwa'
 
     input:
         tuple val(prefix_filename),
