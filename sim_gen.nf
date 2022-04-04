@@ -164,6 +164,7 @@ process ART_ILLUMINA_SINGLE_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
+    conda'bioconda::art=2016.06.05=h874f42a_8 conda-forge::gsl conda-forge::libcblas conda-forge::libgcc-ng conda-forge::libstdcxx-ng'
 
     input:
         tuple val(prefix_filename),
@@ -204,6 +205,7 @@ process ART_ILLUMINA_PAIRED_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
+    conda'bioconda::art=2016.06.05=h874f42a_8 conda-forge::gsl conda-forge::libcblas conda-forge::libgcc-ng conda-forge::libstdcxx-ng'
 
     input:
         tuple val(prefix_filename),
