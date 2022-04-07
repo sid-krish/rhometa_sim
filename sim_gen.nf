@@ -98,7 +98,7 @@ process MSPRIME {
 process REFORMAT_FASTA {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
-    conda 'bioconda::samtools=1.12 bioconda::pysam'
+    conda 'bioconda::samtools==1.15 bioconda::pysam=0.17 conda-forge::openssl=1.1.1n'
 
     input:
         tuple val(prefix_filename),
@@ -164,7 +164,7 @@ process ART_ILLUMINA_SINGLE_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
-    conda'bioconda::art=2016.06.05=h874f42a_8 conda-forge::gsl conda-forge::libcblas conda-forge::libgcc-ng conda-forge::libstdcxx-ng'
+    conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
     input:
         tuple val(prefix_filename),
@@ -205,7 +205,7 @@ process ART_ILLUMINA_PAIRED_END {
     // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
-    conda'bioconda::art=2016.06.05=h874f42a_8 conda-forge::gsl conda-forge::libcblas conda-forge::libgcc-ng conda-forge::libstdcxx-ng'
+    conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
     input:
         tuple val(prefix_filename),
@@ -252,7 +252,7 @@ process BWA_MEM_SINGLE_END {
 
     label 'BWA'
 
-    conda 'bioconda::samtools=1.12 bioconda::bwa'
+    conda 'bioconda::samtools==1.15 bioconda::bwa conda-forge::openssl=1.1.1n'
 
     input:
         tuple val(prefix_filename),
@@ -299,7 +299,7 @@ process BWA_MEM_PAIRED_END {
 
     label 'BWA'
 
-    conda 'bioconda::samtools=1.12 bioconda::bwa'
+    conda 'bioconda::samtools==1.15 bioconda::bwa conda-forge::openssl=1.1.1n'
 
     input:
         tuple val(prefix_filename),
