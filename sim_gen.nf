@@ -25,6 +25,7 @@ def helpMessage() {
     --sample_sizes [int], default:[10], Number of haplotypes to use for generating reads
     --genome_sizes [int], default:[10000], Genome size of haplotypes
     --fold_cov [int], default:[10], The fold of read coverage to be simulated or number of reads/read pairs generated for each haplotype genome
+    --output_dir [str], default:[Sim_Gen_Output], Directory to save results in
 
     """.stripIndent()
 
@@ -56,14 +57,13 @@ process RATE_SELECTOR {
 
     script:
     """
-    printf rho_${rho}_theta_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
+    printf rho_${rho}_tract_${params.recom_tract_len}_theta_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
     """
 
 }  
 
 
 process MSPRIME {
-    // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
     
     conda 'conda-forge::msprime=1.1.1 conda-forge::gsl'
 
@@ -96,7 +96,6 @@ process MSPRIME {
 
 
 process REFORMAT_FASTA {
-    // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     conda 'bioconda::samtools==1.15 bioconda::pysam=0.17 conda-forge::openssl=1.1.1n'
 
@@ -129,7 +128,6 @@ process REFORMAT_FASTA {
 
 
 process ISOLATE_GENOME {
-    // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -161,7 +159,6 @@ process ISOLATE_GENOME {
 
 
 process ART_ILLUMINA_SINGLE_END {
-    // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
     conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
@@ -202,7 +199,6 @@ process ART_ILLUMINA_SINGLE_END {
 
 
 process ART_ILLUMINA_PAIRED_END {
-    // publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     label 'ART'
     conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
@@ -246,7 +242,7 @@ process ART_ILLUMINA_PAIRED_END {
 
 
 process BWA_MEM_SINGLE_END {
-    publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     // maxForks 1
 
@@ -293,7 +289,7 @@ process BWA_MEM_SINGLE_END {
 
 
 process BWA_MEM_PAIRED_END {
-    publishDir "Sim_Gen_Output", mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     // maxForks 1
 
@@ -354,6 +350,7 @@ workflow {
     params.read_len = 150
     params.paired_end_mean_frag_len = 300
     params.paired_end_std_dev = 25 // +- mean frag len
+    params.output_dir = 'Sim_Gen_Output'
 
     // Rho parametric sweep
     // params.rho_rates = [0.005, 0.01, 0.015, 0.02, 0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
