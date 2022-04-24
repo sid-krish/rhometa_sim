@@ -5,7 +5,7 @@ RUN apt-get install -y procps
 RUN conda update conda -y
 
 RUN conda install -c bioconda -c conda-forge -y \
-    python>=3.9 \
+    'python>=3.9' \
     pysam=0.17 \
     bwa \
     samtools==1.15 \

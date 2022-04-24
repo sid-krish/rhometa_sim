@@ -364,7 +364,7 @@ workflow {
     params.theta_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     params.sample_sizes = [20]
     params.fold_cov_rates = [4]
-    params.genome_sizes = [5000]
+    params.genome_sizes = [10000]
     params.seed_vals = [1]
 
     // Theta parametric sweep
