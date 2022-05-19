@@ -1,3 +1,5 @@
 rhometa_sim
 
-details to be added
+Launch with sim_gen.nf
+
+Details to be added
