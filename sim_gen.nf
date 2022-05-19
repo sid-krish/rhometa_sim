@@ -99,6 +99,8 @@ process REFORMAT_FASTA {
 
     conda 'bioconda::samtools==1.15 bioconda::pysam=0.17 conda-forge::openssl=1.1.1n'
 
+    // publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+
     input:
         tuple val(prefix_filename),
             val(rho),
@@ -360,11 +362,11 @@ workflow {
     // params.genome_sizes = [100000]
     // params.seed_vals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-    params.rho_rates = [0.005] // unscaled r values. rho = 2 . p . N_e . r . tractlen
+    params.rho_rates = [0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
     params.theta_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     params.sample_sizes = [20]
     params.fold_cov_rates = [4]
-    params.genome_sizes = [10000]
+    params.genome_sizes = [50000]
     params.seed_vals = [1]
 
     // Theta parametric sweep
