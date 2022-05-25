@@ -5,6 +5,7 @@
 - [About](#about)
   - [Built With](#built-with)
 - [Getting Started](#getting-started)
+  - [Requirements](#requirements)
   - [Set up using conda](#set-up-using-conda)
   - [Set up using docker](#set-up-using-docker)
 - [Rhometa_sim pipeline](#rhometa_sim-pipeline)
@@ -38,6 +39,17 @@ While it is possible to resolve the dependencies using conda for running on macO
 If running on macOS it recommended that docker be used with the provided image, in which case it is similar to running in a linux environment.
 
 It is also possible to install and run the program on Windows via [wsl](https://docs.microsoft.com/en-us/windows/wsl/install).
+
+### Requirements
+* Nextflow: [Nextflow install](https://www.nextflow.io/index.html#GetStarted) 
+  * Installing nextflow via conda is recommended, since with conda other dependencies can also be resolved.
+* Conda or containerization platform
+  * If using conda, the conda package manager available from: [Miniconda download](https://conda.io/en/latest/miniconda.html).
+  * If using containers, docker is recommended and is available from: [Docker download](https://www.docker.com/get-started).
+    * The required docker image can be found at https://hub.docker.com/r/sidkris/rhometa.
+    * It is not required that the user download the image, the program has been pre-configured to use this image, provided docker is 
+    installed and the docker option is enabled.
+  * Other container technologies such as singularity (used for HPCs) are also supported via nextflow.
 
 ### Set up using conda
 Instructions for installing nextflow and dependencies via conda
@@ -150,6 +162,7 @@ Additionaly, in the sim_gen.nf script where the input to options are in the form
 ```
 params.rho_rates = [0.005, 0.01]
 ```
+
 
 <!-- ISSUES AND CONTRIBUTING -->
 ## Issues and Contributing
