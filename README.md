@@ -70,4 +70,4 @@ Instructions for installing nextflow and using the provided docker image for dep
 
 <!-- RHOMETA_SIM PIPELINE COMPOSITION -->
 ## Rhometa_sim pipeline composition
-![Pipeline](images/pipeline.png)
+<img src="images/pipeline.png"  width=50% height=50%>
