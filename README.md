@@ -145,7 +145,7 @@ Options:
 
 It is important to note that the recom_rates and mutation_rates inputs are unscaled values, the final simulated values will be the scaled values following the formulation shown in the help/options above.
 
-Additionaly, in the sim_gen.nf where the input to options are in the form of a list, multiple values can be provided, for instance:
+Additionaly, in the sim_gen.nf script where the input to options are in the form of a list, multiple values can be provided, for instance:
 
 ```
 params.rho_rates = [0.005, 0.01]
