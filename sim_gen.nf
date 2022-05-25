@@ -5,8 +5,6 @@ nextflow.enable.dsl = 2
 def helpMessage() {
 
     log.info"""
-    Description:
-
     Usage:
     nextflow run sim_gen.nf [options]
 
@@ -14,17 +12,17 @@ def helpMessage() {
     nextflow run sim_gen.nf --help
 
     Options:
-    --recom_tract_len [int], default:[500], Recombination tract length to use
+    --tract_len [int], default:[1000], Recombination tract length to use
     --single_end, Used for single end read bams
     --read_len [int], default:[150], Read length of each individual read
     --paired_end_mean_frag_len [int], default:[300], The mean size of DNA fragments for paired-end simulations 
-    --paired_end_std_dev [int], default:[50], The standard deviation of DNA fragment size for paired-end simulations 
+    --paired_end_std_dev [int], default:[25], The standard deviation of DNA fragment size for paired-end simulations 
     --seed [int], default:[123], Seed value to use for simulation
-    --mutation_rate [int], default:[0.01], Population mutation rate, theta
-    --rho_rates [int], default:[10], Population recombiation rate, rho 
-    --sample_sizes [int], default:[10], Number of haplotypes to use for generating reads
-    --genome_sizes [int], default:[10000], Genome size of haplotypes
-    --fold_cov [int], default:[10], The fold of read coverage to be simulated or number of reads/read pairs generated for each haplotype genome
+    --mutation_rates [int], default:[0.005], Unscaled mutation rate. This value is scaled as such: 2 * ploidy (1) * effective_population_size (1) * unscaled_mutation_rate
+    --recom_rates [int], default:[0.005, 0.01], Unscaled recombination rate. This value is scaled as such: 2 * ploidy (1) * effective_population_size (1) * unscaled_recombination_rate * tract_length
+    --sample_sizes [int], default:[20], Number of haplotypes to use for generating reads
+    --genome_sizes [int], default:[50000], Genome size of haplotypes
+    --fold_cov [int], default:[4], The fold of read coverage to be simulated or number of reads/read pairs generated for each haplotype genome
     --output_dir [str], default:[Sim_Gen_Output], Directory to save results in
 
     """.stripIndent()
@@ -57,7 +55,7 @@ process RATE_SELECTOR {
 
     script:
     """
-    printf rho_${rho}_tract_${params.recom_tract_len}_theta_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
+    printf recom_${rho}_tract_${params.recom_tract_len}_mutation_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
     """
 
 }  
@@ -163,7 +161,7 @@ process ISOLATE_GENOME {
 process ART_ILLUMINA_SINGLE_END {
 
     label 'ART'
-    conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
+    conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
     input:
         tuple val(prefix_filename),
@@ -203,7 +201,7 @@ process ART_ILLUMINA_SINGLE_END {
 process ART_ILLUMINA_PAIRED_END {
 
     label 'ART'
-    conda'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
+    conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
     input:
         tuple val(prefix_filename),
@@ -362,20 +360,12 @@ workflow {
     // params.genome_sizes = [100000]
     // params.seed_vals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-    params.rho_rates = [0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
+    params.rho_rates = [0.005, 0.01] // unscaled r values. rho = 2 . p . N_e . r . tractlen
     params.theta_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     params.sample_sizes = [20]
     params.fold_cov_rates = [4]
     params.genome_sizes = [50000]
-    params.seed_vals = [1]
-
-    // Theta parametric sweep
-    // params.rho_rates = [0.0] // unscaled r values. rho = 2 . p . N_e . r . tractlen
-    // params.theta_rates = [0.0, 0.0005, 0.0015, 0.0025] // unscaled u values. theta = 2 . p . N_e . u [0,0.001,0.003,0.005]
-    // params.sample_sizes = [20, 40, 60, 80, 100]
-    // params.fold_cov_rates = [8, 16]
-    // params.genome_sizes = [100000]
-    // params.seed_vals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
+    params.seed_vals = [123]
 
     // Input verification
     if (params.help) {
