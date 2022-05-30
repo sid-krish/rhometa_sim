@@ -160,7 +160,7 @@ It is important to note that the recom_rates and mutation_rates inputs are unsca
 Additionaly, in the sim_gen.nf script where the input to options are in the form of a list, multiple values can be provided, for instance:
 
 ```
-params.rho_rates = [0.005, 0.01]
+params.recom_rates = [0.005, 0.01]
 ```
 
 

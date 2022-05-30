@@ -55,7 +55,7 @@ process RATE_SELECTOR {
 
     script:
     """
-    printf recom_${rho}_tract_${params.recom_tract_len}_mutation_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
+    printf recom_${rho}_tract_${params.tract_len}_mutation_${theta}_sample_size_${sample_size}_depth_${depth}_genome_size_${genome_size}_seed_${seed}_
     """
 
 }  
@@ -74,7 +74,7 @@ process MSPRIME {
             val(genome_size),
             val(seed)
 
-        val(recom_tract_len)
+        val(tract_len)
 
     output:
         tuple val(prefix_filename),
@@ -88,7 +88,7 @@ process MSPRIME {
              
     script:
     """
-    msp_sim_fa.py ${sample_size} ${genome_size} ${rho} ${recom_tract_len} ${seed} ${theta}
+    msp_sim_fa.py ${sample_size} ${genome_size} ${rho} ${tract_len} ${seed} ${theta}
     """
 }
 
@@ -345,7 +345,7 @@ workflow {
     // Params
     params.help = false
 
-    params.recom_tract_len = 1000
+    params.tract_len = 1000
     params.single_end = false
     params.read_len = 150
     params.paired_end_mean_frag_len = 300
@@ -378,7 +378,7 @@ workflow {
     // Process execution
     RATE_SELECTOR(params.recom_rates, params.mutation_rates, params.sample_sizes, params.fold_cov_rates, params.genome_sizes, params.seed_vals)
 
-    MSPRIME(RATE_SELECTOR.out, params.recom_tract_len)
+    MSPRIME(RATE_SELECTOR.out, params.tract_len)
 
     REFORMAT_FASTA(MSPRIME.out)
 
