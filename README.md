@@ -46,7 +46,7 @@ It is also possible to install and run the program on Windows via [wsl](https://
 * Conda or containerization platform
   * If using conda, the conda package manager available from: [Miniconda download](https://conda.io/en/latest/miniconda.html).
   * If using containers, docker is recommended and is available from: [Docker download](https://www.docker.com/get-started).
-    * The required docker image can be found at https://hub.docker.com/r/sidkris/rhometa.
+    * The required docker image can be found at https://hub.docker.com/repository/docker/sidkris/rhometa_sim.
     * It is not required that the user download the image, the program has been pre-configured to use this image, provided docker is 
     installed and the docker option is enabled.
   * Other container technologies such as singularity (used for HPCs) are also supported via nextflow.
