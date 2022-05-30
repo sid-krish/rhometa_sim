@@ -353,15 +353,15 @@ workflow {
     params.output_dir = 'Sim_Gen_Output'
 
     // Rho parametric sweep
-    // params.rho_rates = [0.005, 0.01, 0.015, 0.02, 0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
-    // params.theta_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
+    // params.recom_rates = [0.005, 0.01, 0.015, 0.02, 0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
+    // params.mutation_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     // params.sample_sizes = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
     // params.fold_cov_rates = [1, 4, 8, 16]
     // params.genome_sizes = [100000]
     // params.seed_vals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
 
-    params.rho_rates = [0.005, 0.01] // unscaled r values. rho = 2 . p . N_e . r . tractlen
-    params.theta_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
+    params.recom_rates = [0.005, 0.01] // unscaled r values. rho = 2 . p . N_e . r . tractlen
+    params.mutation_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     params.sample_sizes = [20]
     params.fold_cov_rates = [4]
     params.genome_sizes = [50000]
@@ -376,7 +376,7 @@ workflow {
     }
     
     // Process execution
-    RATE_SELECTOR(params.rho_rates, params.theta_rates, params.sample_sizes, params.fold_cov_rates, params.genome_sizes, params.seed_vals)
+    RATE_SELECTOR(params.recom_rates, params.mutation_rates, params.sample_sizes, params.fold_cov_rates, params.genome_sizes, params.seed_vals)
 
     MSPRIME(RATE_SELECTOR.out, params.recom_tract_len)
 
