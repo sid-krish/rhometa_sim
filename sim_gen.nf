@@ -64,6 +64,7 @@ process RATE_SELECTOR {
 process MSPRIME {
     
     conda 'conda-forge::msprime=1.1.1 conda-forge::gsl'
+    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -163,6 +164,8 @@ process ART_ILLUMINA_SINGLE_END {
     label 'ART'
     conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
+    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+
     input:
         tuple val(prefix_filename),
             val(rho),
@@ -202,6 +205,8 @@ process ART_ILLUMINA_PAIRED_END {
 
     label 'ART'
     conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
+
+    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -353,14 +358,7 @@ workflow {
     params.output_dir = 'Sim_Gen_Output'
 
     // Rho parametric sweep
-    // params.recom_rates = [0.005, 0.01, 0.015, 0.02, 0.025] // unscaled r values. rho = 2 . p . N_e . r . tractlen
-    // params.mutation_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
-    // params.sample_sizes = [20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
-    // params.fold_cov_rates = [1, 4, 8, 16]
-    // params.genome_sizes = [100000]
-    // params.seed_vals = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20]
-
-    params.recom_rates = [0.005, 0.01] // unscaled r values. rho = 2 . p . N_e . r . tractlen
+    params.recom_rates = [0.005] // unscaled r values. rho = 2 . p . N_e . r . tractlen
     params.mutation_rates = [0.005] // unscaled u values. theta = 2 . p . N_e . u
     params.sample_sizes = [20]
     params.fold_cov_rates = [4]
