@@ -62,9 +62,8 @@ process RATE_SELECTOR {
 
 
 process MSPRIME {
-    
-    conda 'conda-forge::msprime=1.1.1 conda-forge::gsl'
-    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+    conda 'conda-forge::msprime=1.3.4 conda-forge::gsl'
+    // publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -96,7 +95,7 @@ process MSPRIME {
 
 process REFORMAT_FASTA {
 
-    conda 'bioconda::samtools==1.15 bioconda::pysam=0.17 conda-forge::openssl=1.1.1n'
+    conda 'bioconda::samtools=1.18 bioconda::pysam=0.22 conda-forge::openssl'
 
     // publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
@@ -164,7 +163,7 @@ process ART_ILLUMINA_SINGLE_END {
     label 'ART'
     conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
-    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+    // publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -206,7 +205,7 @@ process ART_ILLUMINA_PAIRED_END {
     label 'ART'
     conda 'bioconda::art=2016.06.05=h*_8 conda-forge::gsl conda-forge::libcblas conda-forge::libcxx'
 
-    publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
+    // publishDir params.output_dir, mode: "copy", saveAs: {filename -> "${prefix_filename}${filename}"}
 
     input:
         tuple val(prefix_filename),
@@ -253,7 +252,7 @@ process BWA_MEM_SINGLE_END {
 
     label 'BWA'
 
-    conda 'bioconda::samtools==1.15 bioconda::bwa conda-forge::openssl=1.1.1n'
+    conda 'bioconda::samtools=1.18 bioconda::bwa-mem2=2.2.1 conda-forge::openssl'
 
     input:
         tuple val(prefix_filename),
@@ -280,14 +279,11 @@ process BWA_MEM_SINGLE_END {
     script:
     // using first fa entry only (one genome)
     """
-    bwa index firstGenome.fa
+    bwa-mem2 index firstGenome.fa
 
     #Single end
-    bwa mem -t $task.cpus firstGenome.fa art_out.fq > Aligned.sam
+    bwa-mem2 mem -t $task.cpus firstGenome.fa art_out.fq | samtools sort -@ $task.cpus -o Aligned.bam
 
-    samtools view -bS Aligned.sam > Aligned.bam
-
-    mv Aligned.bam final.bam
     mv firstGenome.fa final.fa
     """
 }
@@ -300,7 +296,7 @@ process BWA_MEM_PAIRED_END {
 
     label 'BWA'
 
-    conda 'bioconda::samtools==1.15 bioconda::bwa conda-forge::openssl=1.1.1n'
+    conda 'bioconda::samtools=1.18 bioconda::bwa-mem2=2.2.1 conda-forge::openssl'
 
     input:
         tuple val(prefix_filename),
@@ -328,14 +324,11 @@ process BWA_MEM_PAIRED_END {
     script:
     // using first fa entry only (one genome)
     """
-    bwa index firstGenome.fa
+    bwa-mem2 index firstGenome.fa
 
     #Paired end
-    bwa mem -t $task.cpus firstGenome.fa art_out_1.fq art_out_2.fq > Aligned.sam
+    bwa-mem2 mem -t $task.cpus firstGenome.fa art_out_1.fq art_out_2.fq | samtools sort -@ $task.cpus -o final.bam
 
-    samtools view -bS Aligned.sam > Aligned.bam
-
-    mv Aligned.bam final.bam
     mv firstGenome.fa final.fa
     """
 }
